@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="{{ site.description }}" />
+    <title>Polkadot Vanity Address Generator</title>
+    <style>
+      html,
+      body {
+        all: initial;
+        height: 100%;
+      }
+      body {
+        background-color: lightslategrey;
+        font-size: x-large;
+      }
+      form {
+        margin: auto;
+        width: 90%;
+        max-width: 600px;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        row-gap: 1rem;
+        column-gap: 0.5rem;
+        font-size: larger;
+      }
+      input,
+      output {
+        height: 2.5rem;
+      }
+      input {
+        padding: 0 1rem;
+        box-sizing: border-box;
+      }
+      output {
+        grid-column: 1 / -1;
+      }
+      input[name="pattern"] {
+        grid-column: 1 / -2;
+      }
+      input[name="char"] {
+        text-align: center;
+      }
+      output {
+        display: block;
+        background: whitesmoke;
+        padding: 0 0.5rem;
+        border-radius: 3px;
+        line-height: 2.5rem;
+        text-align: center;
+        color: gray;
+        font-family: monospace;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      output[name="address"]:before {
+        content: "⬤  ";
+        color: #e6007a;
+      }
+      output[name="key"]:before {
+        content: "🔑  ";
+      }
+      h1 {
+        text-align: center;
+        display: block;
+        color: #e6007a;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Hello ! from Abuzar</h1>
+    <form name="vanity">
+      <input
+        name="pattern"
+        type="text"
+        placeholder="Any Text Here"
+        required
+        size="20"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <input
+        title="Fill character"
+        name="char"
+        type="text"
+        placeholder="1"
+        size="1"
+        maxlength="1"
+        autocomplete="off"
+      />
+      <output title="Polkadot address" name="address"
+        >Polkadot Address ~</output
+      >
+      <output title="Public Key" name="key">Key~</output>
+    </form>
+  </body>
+
+  <script type="module">
+    import init, { Address } from "./vanity.js";
+    init().then(() => console.info("wasm ready"));
+
+    const submit = document.forms.vanity;
+    addEventListener("input", () => {
+      const addr = Address.withVanity(submit.pattern.value, submit.char.value);
+      submit.address.value = addr?.encode() || "Please Input Again!";
+      const hexStr = (bytes = []) =>
+        "0x" +
+        [...bytes].map((n) => Number(n).toString(16).padStart(2, "0")).join("");
+      submit.key.value = hexStr(addr?.key());
+    });
+  </script>
+</html>

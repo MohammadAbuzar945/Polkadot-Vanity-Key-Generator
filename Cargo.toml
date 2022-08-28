@@ -1,0 +1,19 @@
+[package]
+name = "keyless-vanity"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+base58 = "0.2.0"
+blake2-rfc = { version = "0.2.18", default-features = false }
+wasm-bindgen = { version = "0.2.79", optional = true }
+
+[dev-dependencies]
+shannon-entropy = "1.0.0"
+rand = "0.8.5"
+
+[features]
+web = ["wasm-bindgen"]
